@@ -1,0 +1,90 @@
+# Jaeger Tracing Setup Guide
+
+This document provides instructions for setting up and running **Jaeger** for distributed tracing in your microservices.
+
+## Prerequisites
+- **Docker** installed on your machine
+- Services instrumented with **OpenTelemetry** to send traces to Jaeger
+
+## Pull and Run Jaeger Container
+Run the following command to pull the latest Jaeger **all-in-one** image and start the container:
+
+```sh
+sudo docker pull jaegertracing/all-in-one:latest
+```
+
+```sh
+sudo docker run -d --name jaeger \
+  -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 \
+  -p 5775:5775/udp \
+  -p 6831:6831/udp \
+  -p 6832:6832/udp \
+  -p 5778:5778 \
+  -p 16686:16686 \
+  -p 14268:14268 \
+  -p 14250:14250 \
+  -p 9411:9411 \
+  jaegertracing/all-in-one:latest
+```
+
+## Port Details
+| Port  | Protocol | Component  | Function |
+|-------|----------|------------|----------|
+| 5775  | UDP      | Agent      | Accepts Zipkin thrift over compact thrift protocol |
+| 6831  | UDP      | Agent      | Accepts Jaeger thrift over compact thrift protocol |
+| 6832  | UDP      | Agent      | Accepts Jaeger thrift over binary thrift protocol |
+| 5778  | HTTP     | Agent      | Serves configs |
+| 16686 | HTTP     | Query      | Serves frontend UI |
+| 14268 | HTTP     | Collector  | Accepts Jaeger.thrift directly from clients |
+| 14250 | HTTP     | Collector  | Receives traces from OpenTelemetry collectors |
+| 9411  | HTTP     | Collector  | Zipkin-compatible endpoint |
+
+## Accessing Jaeger UI
+Once Jaeger is running, you can access its **UI** in your browser:
+
+📌 **[http://localhost:16686](http://localhost:16686)**
+
+## Configuring Your Services to Send Traces
+To send traces to Jaeger, ensure your services are configured to export traces to:
+
+```
+http://localhost:14268/api/traces
+```
+
+If your services are running **inside a Docker network**, use:
+```
+http://jaeger:14268/api/traces
+```
+
+## Verifying If Traces Are Sent to Jaeger
+Run the following test command to check if Jaeger is receiving traces:
+```sh
+curl -X POST http://localhost:14268/api/traces -d '{}'
+```
+If Jaeger responds with **200 OK**, it means it's accepting traces.
+
+## Debugging Issues
+If traces do not appear in the Jaeger UI:
+1. **Check if Jaeger is running:**
+   ```sh
+   docker ps | grep jaeger
+   ```
+2. **Check Jaeger logs:**
+   ```sh
+   docker logs -f jaeger
+   ```
+3. **Ensure your services are sending traces to the correct endpoint (`localhost:14268` or `jaeger:14268`).**
+4. **Restart Jaeger if needed:**
+   ```sh
+   docker restart jaeger
+   ```
+
+## Stopping and Removing Jaeger
+To stop and remove the Jaeger container:
+```sh
+docker stop jaeger && docker rm jaeger
+```
+
+---
+🚀 Now you have **Jaeger** running and collecting traces for your microservices!
+
