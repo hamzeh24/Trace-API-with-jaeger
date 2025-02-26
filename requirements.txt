@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+opentelemetry-api
+opentelemetry-sdk
+opentelemetry-instrumentation-fastapi
+opentelemetry-exporter-jaeger
+prometheus-fastapi-instrumentator
+opentelemetry-exporter-otlp
+
+
+
+
