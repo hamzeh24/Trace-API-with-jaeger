@@ -46,6 +46,11 @@ This project consists of two **Node.js microservices**, **Hash Service** and **L
 ## 📡 Jaeger Tracing  
 Each request is traced using **OpenTelemetry**, and traces are exported to **Jaeger**.  
 
+## 📡 prometheus 
+Collects metrics from configured targets at given intervals 
+### To install prometheus follow the instructions in this URL:
+https://hub.docker.com/r/prom/prometheus 
+
 ## 🏗️ Running the Project  
 
 ### 1️⃣ Clone the Repository  
