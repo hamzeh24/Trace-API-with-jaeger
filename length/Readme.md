@@ -27,12 +27,12 @@ Copy
 Edit
 docker build -t length-service .  
 docker run -p 3001:3001 length-service  
-With Node.js:
-sh
-Copy
-Edit
-npm install  
-node length.js  
-📌 Notes
-Ensure Prometheus scrapes the /metrics endpoint.
-The service is intended to be used with Jaeger for tracing and Prometheus for monitoring.
+
+📌 Notes Ensure edit prometheus.yml to add the service name or container IP
+
+job_name: "hash" static_configs:
+
+targets: ["container IP:3000"]
+job_name: "length" static_configs:
+
+targets: ["container IP:3001"]
